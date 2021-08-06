@@ -1,155 +1,15 @@
-'use strict';
+"use strict";
 
-require("./color-thief");
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-angular.module('ngColorThief', [])
-  .provider('$colorThief', [function () {
-    /**
-     This will hold the global ColorThief instance
-     */
-    var colorThief = new ColorThief();
-
-    /**
-     Holds the default quality set by the user.
-     */
-    var defaultQuality;
-
-    /**
-     Holds the default colorCount set by the user.
-     */
-    var defaultColorCount;
-
-    /**
-     If true, colors will be returned as an object like so:
-
-         {r: 255, g: 200, b: 150}
-
-     Same for arrays (palettes):
-
-         [{r: 255, g: 200, b: 150}, {r: 250, g: 190, b: 150}]
-
-     */
-    var returnObjects = false;
-
-    /**
-     Will overwrite ColorThief's default quality
-     */
-    this.setDefaultQuality = function (quality) {
-      defaultQuality = quality;
-    };
-
-    /**
-     Will overwrite ColorThief's default colorCount for the
-     palettes calculation.
-     */
-    this.setDefaultColorCount = function (colorCount) {
-      defaultColorCount = colorCount;
-    };
-
-    /**
-     Will set the returnObjects setting to the passed value
-     */
-    this.setReturnObjects = function (setting) {
-      returnObjects = setting;
-    };
-
-    /**
-     Public service API
-     */
-    this.$get = [function () {
-      function mapColor(color) {
-        if ( ! returnObjects) {
-          return color;
-        }
-
-        return {
-          r: color[0],
-          g: color[1],
-          b: color[2]
-        };
-      }
-
-      return {
-        getColor: function (image, quality) {
-          return mapColor(colorThief.getColor(image, quality || defaultQuality));
-        },
-
-        getPalette: function (image, colorCount, quality) {
-          var colors = colorThief.getPalette(image, colorCount || defaultColorCount, quality || defaultQuality);
-
-          for (var i = colors.length - 1; i >= 0; i--) {
-            colors[i] = mapColor(colors[i]);
-          };
-
-          return colors;
-        }
-      };
-    }];
-  }])
-
-  /**
-   Apply this directive to an IMG tag and supply a variable name where
-   the color palette will be set. For example:
-
-       <img ng-src="{{mySrc}}" color-thief color-thief-dominant="myDominantColor">
-
-   This will calculate the dominant color of the image and set it to the myColor variable on
-   the scope.
-
-   If you want an 8 color palette, add a colorThiefPallette directive, like so:
-
-       <img ng-src="{{mySrc}}" color-thief color-thief-palette="myPalette" color-thief-palette-count="8">
-
-   colorThiefPaletteCount is 8 by default, so there's no need to define it if you need 8 colors.
-
-   Note: a color count of 1 is not valid and will throw an error.
-   */
-  .directive('colorThief', ['$parse', '$colorThief', function ($parse, $colorThief) {
-    return {
-      restrict: 'A',
-      scope: {
-        dominant: '=colorThiefDominant',
-        palette: '=colorThiefPalette'
-      },
-      link: function (scope, element, attrs) {
-        if (angular.uppercase(element[0].tagName) !== 'IMG') {
-          throw new Error('The colorThief directive has to be applied to an IMG tag.');
-        }
-
-        // Allow configuring the image to retrieve CORS-enabled images.
-        if (angular.isDefined(attrs.crossorigin) || angular.isDefined(attrs.crossOrigin)) {
-          element[0].crossOrigin = attrs.crossorigin || attrs.crossOrigin || 'Anonymous';
-        }
-
-        // Set it to undefined by default to allow the provider's default count overwrite this if needed
-        var paletteCount = attrs.colorThiefPaletteCount ? $parse(attrs.colorThiefPaletteCount)() : undefined;
-
-        // Everytime the image loads, calculate the colors again
-        element.on('load', function () {
-          scope.$apply(function () {
-            if (attrs.colorThiefDominant) {
-              scope.dominant = $colorThief.getColor(element[0]);
-            }
-
-            if (attrs.colorThiefPalette) {
-              scope.palette = $colorThief.getPalette(element[0], paletteCount);
-            }
-          });
-        });
-      }
-    };
-  }]);
-
-;"use strict";
-
-var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
-  return typeof e === "undefined" ? "undefined" : _typeof2(e);
+var _typeof2 = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (e) {
+  return typeof e === "undefined" ? "undefined" : _typeof(e);
 } : function (e) {
-  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof2(e);
+  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof(e);
 };!function (e) {
-  "object" === ("undefined" == typeof exports ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define([], e) : ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).GitHubCalendar = e();
+  if ("object" === ("undefined" == typeof exports ? "undefined" : _typeof2(exports)) && "undefined" != typeof module) module.exports = e();else if ("function" == typeof define && define.amd) define([], e);else {
+    ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).GitHubCalendar = e();
+  }
 }(function () {
   return function o(s, u, i) {
     function c(t, e) {
@@ -186,26 +46,30 @@ var _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterato
         };return function g() {
           return m.getCalendar(e).then(function (e) {
             var t = document.createElement("div");t.innerHTML = e;var r,
-                n,
-                a,
-                o,
-                s,
                 u,
-                i,
-                c,
-                l,
-                d,
-                f,
-                p = t.querySelector(".js-yearly-contributions");y(".position-relative h2", p).remove(), p.querySelector(".float-left.text-gray").innerHTML = m.summary_text, p.querySelector("include-fragment") ? setTimeout(g, 500) : (!0 === m.responsive && (n = (r = p.querySelector("svg.js-calendar-graph-svg")).getAttribute("width"), a = r.getAttribute("height"), r.removeAttribute("height"), r.setAttribute("width", "100%"), r.setAttribute("viewBox", "0 0 " + n + " " + a)), !1 !== m.global_stats && (s = (o = h(y("svg", p).outerHTML)).current_streak ? M(o.current_streak_range[0], _) + " &ndash; " + M(o.current_streak_range[1], _) : o.last_contributed ? "Last contributed in " + M(o.last_contributed, _) + "." : "Rock - Hard Place", u = o.longest_streak ? M(o.longest_streak_range[0], _) + " &ndash; " + M(o.longest_streak_range[1], _) : o.last_contributed ? "Last contributed in " + M(o.last_contributed, _) + "." : "Rock - Hard Place", i = y("<div>", { class: "contrib-column contrib-column-first table-column", html: '<span class="text-muted">Contributions in the last year</span>\n                               <span class="contrib-number">' + o.last_year + ' total</span>\n                               <span class="text-muted">' + M(v.add(v.subtract(new Date(), 1, "year"), 1, "day"), x) + " &ndash; " + M(new Date(), x) + "</span>" }), c = y("<div>", { class: "contrib-column table-column", html: '<span class="text-muted">Longest streak</span>\n                               <span class="contrib-number">' + k(o.longest_streak) + '</span>\n                               <span class="text-muted">' + u + "</span>" }), l = y("<div>", { class: "contrib-column table-column", html: '<span class="text-muted">Current streak</span>\n                               <span class="contrib-number">' + k(o.current_streak) + '</span>\n                               <span class="text-muted">' + s + "</span>" }), p.appendChild(i), p.appendChild(c), p.appendChild(l)), b.innerHTML = p.innerHTML, !0 === m.tooltips && (d = b, (f = document.createElement("div")).classList.add("day-tooltip"), d.appendChild(f), d.querySelectorAll("rect.day").forEach(function (e) {
-              e.addEventListener("mouseenter", function (e) {
-                var t = e.target.getAttribute("data-count");"0" === t ? t = "No contributions" : "1" === t ? t = "1 contribution" : t += " contributions";var r = new Date(e.target.getAttribute("data-date")),
-                    n = S[r.getUTCMonth()] + " " + r.getUTCDate() + ", " + r.getUTCFullYear();f.innerHTML = "<strong>" + t + "</strong> on " + n, f.classList.add("is-visible");var a = e.target.getBoundingClientRect(),
-                    o = a.left + window.pageXOffset - f.offsetWidth / 2 + a.width / 2,
-                    s = a.bottom + window.pageYOffset - f.offsetHeight - 2 * a.height;f.style.top = s + "px", f.style.left = o + "px";
-              }), e.addEventListener("mouseleave", function () {
-                f.classList.remove("is-visible");
-              });
-            })));
+                n = t.querySelector(".js-yearly-contributions");if (y(".position-relative h2", n).remove(), n.querySelector("include-fragment")) setTimeout(g, 500);else {
+              if (!0 === m.responsive) {
+                var a = n.querySelector("svg.js-calendar-graph-svg"),
+                    o = a.getAttribute("width"),
+                    s = a.getAttribute("height");a.removeAttribute("height"), a.setAttribute("width", "100%"), a.setAttribute("viewBox", "0 0 " + o + " " + s);
+              }if (!1 !== m.global_stats) {
+                var i = h(y("svg", n).outerHTML),
+                    c = i.current_streak ? M(i.current_streak_range[0], _) + " &ndash; " + M(i.current_streak_range[1], _) : i.last_contributed ? "Last contributed in " + M(i.last_contributed, _) + "." : "Rock - Hard Place",
+                    l = i.longest_streak ? M(i.longest_streak_range[0], _) + " &ndash; " + M(i.longest_streak_range[1], _) : i.last_contributed ? "Last contributed in " + M(i.last_contributed, _) + "." : "Rock - Hard Place",
+                    d = y("<div>", { class: "contrib-column contrib-column-first table-column", html: '<span class="text-muted">Contributions in the last year</span>\n                               <span class="contrib-number">' + i.last_year + ' total</span>\n                               <span class="text-muted">' + M(v.add(v.subtract(new Date(), 1, "year"), 1, "day"), x) + " &ndash; " + M(new Date(), x) + "</span>" }),
+                    f = y("<div>", { class: "contrib-column table-column", html: '<span class="text-muted">Longest streak</span>\n                               <span class="contrib-number">' + k(i.longest_streak) + '</span>\n                               <span class="text-muted">' + l + "</span>" }),
+                    p = y("<div>", { class: "contrib-column table-column", html: '<span class="text-muted">Current streak</span>\n                               <span class="contrib-number">' + k(i.current_streak) + '</span>\n                               <span class="text-muted">' + c + "</span>" });n.appendChild(d), n.appendChild(f), n.appendChild(p);
+              }b.innerHTML = n.innerHTML, !0 === m.tooltips && (r = b, (u = document.createElement("div")).classList.add("day-tooltip"), r.appendChild(u), r.querySelectorAll("rect.day").forEach(function (e) {
+                e.addEventListener("mouseenter", function (e) {
+                  var t = e.target.getAttribute("data-count");"0" === t ? t = "No contributions" : "1" === t ? t = "1 contribution" : t += " contributions";var r = new Date(e.target.getAttribute("data-date")),
+                      n = S[r.getUTCMonth()] + " " + r.getUTCDate() + ", " + r.getUTCFullYear();u.innerHTML = "<strong>" + t + "</strong> on " + n, u.classList.add("is-visible");var a = e.target.getBoundingClientRect(),
+                      o = a.left + window.pageXOffset - u.offsetWidth / 2 + a.width / 2,
+                      s = a.bottom + window.pageYOffset - u.offsetHeight - 2 * a.height;u.style.top = s + "px", u.style.left = o + "px";
+                }), e.addEventListener("mouseleave", function () {
+                  u.classList.remove("is-visible");
+                });
+              }));
+            }
           }).catch(function (e) {
             return console.error(e);
           });
@@ -316,19 +180,21 @@ var _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterato
             u = [];return e.split("\n").slice(2).map(function (e) {
           return e.trim();
         }).forEach(function (e) {
-          if (e.startsWith("<g transform")) return u.length && s.weeks.push(u) && (u = []);var t,
-              r = e.match(/fill="(#[a-z0-9]+)"/),
-              n = e.match(/data-date="([0-9\-]+)"/),
-              a = e.match(/data-count="([0-9]+)"/),
-              r = r && r[1],
-              n = n && n[1],
-              a = a && +a[1];r && (t = { fill: r, date: new Date(n), count: a, level: i.indexOf(r) }, 0 === s.current_streak && (s.current_streak_range[0] = t.date), t.count ? (++s.current_streak, s.last_year += t.count, s.last_contributed = t.date, s.current_streak_range[1] = t.date) : (o(), s.current_streak = 0), u.push(t), s.days.push(t));
+          if (e.startsWith("<g transform")) return u.length && s.weeks.push(u) && (u = []);var t = e.match(/data-level="([0-9\-]+)"/i),
+              r = e.match(/data-date="([0-9\-]+)"/),
+              n = e.match(/data-count="([0-9]+)"/);if (t = t && t[1], r = r && r[1], n = n && +n[1], t) {
+            var a = { fill: i[t], date: new Date(r), count: n, level: t };0 === s.current_streak && (s.current_streak_range[0] = a.date), a.count ? (++s.current_streak, s.last_year += a.count, s.last_contributed = a.date, s.current_streak_range[1] = a.date) : (o(), s.current_streak = 0), u.push(a), s.days.push(a);
+          }
         }), o(), s;
       };
     }, { "github-calendar-legend": 7 }], 9: [function (e, t, r) {
-      t.exports = function (e, t) {
+      var a = "function" == typeof Symbol && "symbol" === _typeof2(Symbol.iterator) ? function (e) {
+        return void 0 === e ? "undefined" : _typeof2(e);
+      } : function (e) {
+        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : void 0 === e ? "undefined" : _typeof2(e);
+      };t.exports = function (e, t) {
         var r = 0,
-            n = [];if (Array.isArray(e)) for (; r < e.length && !1 !== t(e[r], r, e); ++r) {} else if ("object" === (void 0 === e ? "undefined" : _typeof(e)) && null !== e) for (n = Object.keys(e); r < n.length && !1 !== t(e[n[r]], n[r], e); ++r) {}
+            n = [];if (Array.isArray(e)) for (; r < e.length && !1 !== t(e[r], r, e); ++r) {} else if ("object" === (void 0 === e ? "undefined" : a(e)) && null !== e) for (n = Object.keys(e); r < n.length && !1 !== t(e[n[r]], n[r], e); ++r) {}
       };
     }, {}], 10: [function (e, t, r) {
       t.exports = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], t.exports.abbr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], t.exports.it = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"], t.exports.abbr.it = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"], t.exports.de = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"], t.exports.abbr.de = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
@@ -342,10 +208,11 @@ var _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterato
       }var o = e("regex-escape"),
           s = (n(u, [{ key: "run", value: function value(e, t) {
           var r = "";t = t || [];do {
-            var n,
-                a = e.match(this.re),
-                o = a && a[1],
-                s = o || e.charAt(0);o ? ("function" == typeof (n = this.obj[o]) && (n = n.apply(this, t)), r += n) : r += s, e = e.substring(s.length);
+            var n = e.match(this.re),
+                a = n && n[1],
+                o = a || e.charAt(0);if (a) {
+              var s = this.obj[a];"function" == typeof s && (s = s.apply(this, t)), r += s;
+            } else r += o;e = e.substring(o.length);
           } while (e);return r;
         } }]), u);function u(e) {
         !function (e, t) {
