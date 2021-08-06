@@ -3313,7 +3313,7 @@ class SocialMediaComponent {
         this.socialMediaLinks = {
             github: "https://github.com/gauravnayyar",
             linkedin: "https://www.linkedin.com/in/gauravnayyar525/",
-            gmail: "mailto:Nayyar525@gmail.com",
+            gmail: "Nayyar525@gmail.com",
             instagram: "https://www.instagram.com/iamgauravnayyar/",
             facebook: "https://www.facebook.com/gaurav.nayyar.90",
             whatsapp: 'https://wa.me/+918130098131?text=Hi%20Gaurav'
